@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Activity, Wind, AlertTriangle, MapPin } from "lucide-react"
+import { sensorStatus } from "@/lib/dummy-data"
 
 export function DashboardStats() {
     return (
@@ -22,9 +23,9 @@ export function DashboardStats() {
                     <Wind className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">124/132</div>
+                    <div className="text-2xl font-bold">{sensorStatus.active}/{sensorStatus.total}</div>
                     <p className="text-xs text-muted-foreground">
-                        94% operational uptime
+                        {Math.round((sensorStatus.active / sensorStatus.total) * 100)}% operational uptime
                     </p>
                 </CardContent>
             </Card>

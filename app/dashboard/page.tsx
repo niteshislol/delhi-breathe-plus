@@ -1,9 +1,22 @@
+"use client"
+
+import dynamic from "next/dynamic"
 import { DashboardCharts } from "@/components/dashboard/dashboard-charts"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { alerts, hotspots } from "@/lib/dummy-data"
+import { alerts } from "@/lib/dummy-data"
 import { AlertCircle, Info, AlertTriangle } from "lucide-react"
+
+// Dynamically import the map component with no SSR
+const SensorMap = dynamic(() => import("@/components/dashboard/sensor-map"), {
+    ssr: false,
+    loading: () => (
+        <div className="flex h-full w-full items-center justify-center bg-slate-100 text-slate-400">
+            <p>Loading Map...</p>
+        </div>
+    ),
+})
 
 export default function DashboardPage() {
     return (
@@ -27,32 +40,9 @@ export default function DashboardPage() {
                             Real-time visualization of sensor clusters and pollution hotspots.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-slate-100">
-                            {/* Map Placeholder */}
-                            <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-                                <div className="text-center">
-                                    <p className="text-lg font-semibold">Interactive Map Module</p>
-                                    <p className="text-sm">Loading GIS Data...</p>
-                                </div>
-                            </div>
-
-                            {/* Simulated Hotspots */}
-                            {hotspots.map((spot, i) => (
-                                <div
-                                    key={spot.id}
-                                    className="absolute flex flex-col items-center"
-                                    style={{
-                                        top: `${20 + i * 20}%`,
-                                        left: `${20 + i * 15}%`
-                                    }}
-                                >
-                                    <div className={`h-4 w-4 rounded-full animate-pulse ${spot.status === 'Severe' ? 'bg-red-500' :
-                                            spot.status === 'Poor' ? 'bg-orange-500' : 'bg-yellow-500'
-                                        }`} />
-                                    <span className="mt-1 text-xs font-bold bg-white/80 px-1 rounded shadow-sm">{spot.name}</span>
-                                </div>
-                            ))}
+                    <CardContent className="p-0 sm:p-6">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-slate-100 sm:h-[400px]">
+                            <SensorMap />
                         </div>
                     </CardContent>
                 </Card>
